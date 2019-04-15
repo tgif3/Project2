@@ -7,10 +7,12 @@ import com.google.gson.GsonBuilder;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-class RetrofitCallCreator {
+
+public class RetrofitCallCreator {
     private final static RetrofitCallCreator INSTANCE;
 
     static {
@@ -25,10 +27,13 @@ class RetrofitCallCreator {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(10, TimeUnit.SECONDS);
         httpClient.readTimeout(20, TimeUnit.SECONDS);
+        httpClient.addInterceptor(loggingInterceptor);
 
         builder = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
@@ -36,11 +41,11 @@ class RetrofitCallCreator {
                 .addConverterFactory(GsonConverterFactory.create(gson));
     }
 
-    static RetrofitCallCreator getInstance() {
+    public static RetrofitCallCreator getInstance() {
         return INSTANCE;
     }
 
-    <S> S createService(Class<S> serviceClass) {
+    public <S> S createService(Class<S> serviceClass) {
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
