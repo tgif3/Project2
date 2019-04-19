@@ -6,6 +6,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 
 import java.util.ArrayList;
@@ -24,14 +25,8 @@ public class ConnectionManager {
         return INSTANCE;
     }
 
-    public ArrayList<Post> load() {
+    public ArrayList<Post> loadPost() {
         end = false;
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         ArrayList<Post> result = new ArrayList<>();
 
@@ -67,4 +62,46 @@ public class ConnectionManager {
 
         return result;
     }
+
+    public ArrayList<Comment> loadComment(int postId) {
+        end = false;
+
+        ArrayList<Comment> result = new ArrayList<>();
+
+        AndroidNetworking.get("https://jsonplaceholder.typicode.com/comments?postId={postId}")
+                .addPathParameter("postId", String.valueOf(postId))
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsObjectList(Comment.class, new ParsedRequestListener<List<Comment>>() {
+                    @Override
+                    public void onResponse(List<Comment> comments) {
+                        result.addAll(comments);
+                        Log.i("Comments", "comments size : " + comments.size());
+                        for (Comment comment: comments) {
+                            Log.i("Comments", "\n" + comment.getId() + "\n" + comment.getPostId() +
+                                    "\n" + comment.getEmail() + "\n" + comment.getName() + "\n" +
+                                    comment.getBody());
+                        }
+
+                        end = true;
+                    }
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.i("Comments", "on Error");
+                        end = true;
+                    }
+                });
+
+        while (!end) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+
 }

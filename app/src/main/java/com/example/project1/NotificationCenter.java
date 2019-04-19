@@ -1,11 +1,10 @@
 package com.example.project1;
 
+import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 import com.example.project1.interfaces.CommentRepositoryObserver;
 import com.example.project1.interfaces.PostRepositoryObserver;
 import com.example.project1.interfaces.Subject;
-
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 

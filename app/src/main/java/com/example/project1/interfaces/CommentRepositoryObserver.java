@@ -1,6 +1,6 @@
 package com.example.project1.interfaces;
 
-import org.w3c.dom.Comment;
+import com.example.project1.entity.Comment;
 
 import java.util.ArrayList;
 

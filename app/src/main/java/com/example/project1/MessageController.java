@@ -2,6 +2,7 @@ package com.example.project1;
 
 import android.content.Context;
 
+import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ public class MessageController {
     private DBHelper dbHelper;
     private static MessageController INSTANCE;
     private ArrayList<Post> posts;
-    private boolean connecting = false;
+    private ArrayList<Comment> comments;
 
+    private boolean connectingPost = false;
+    private boolean connectingComment = false;
 
     private MessageController(Context context) {
         storageManager = StorageManager.getInstance();
@@ -35,21 +38,41 @@ public class MessageController {
         return INSTANCE;
     }
 
-    public void fetch(boolean fromCache) {
+    public void fetchPosts(boolean fromCache) {
         if (fromCache) {
             Thread storage = new Thread(() -> {
-                posts = storageManager.load();
+                posts = storageManager.loadPosts();
                 notificationCenter.postsLoaded(posts);
             }, "storage");
             storage.start();
         }
         else {
             Thread cloud = new Thread(() -> {
-                connecting = true;
-                posts = connectionManager.load();
-                storageManager.save(posts);
+                connectingPost = true;
+                posts = connectionManager.loadPost();
+                storageManager.savePosts(posts);
                 notificationCenter.postsLoaded(posts);
-                connecting = false;
+                connectingPost = false;
+            }, "cloud");
+            cloud.start();
+        }
+    }
+
+    public void fetchComments(boolean fromCache, int postId) {
+        if (fromCache) {
+            Thread storage = new Thread(() -> {
+                comments = storageManager.loadComments(postId);
+                notificationCenter.commentsLoaded(comments);
+            }, "storage");
+            storage.start();
+        }
+        else {
+            Thread cloud = new Thread(() -> {
+                connectingComment = true;
+                comments = connectionManager.loadComment(postId);
+                storageManager.saveComments(comments);
+                notificationCenter.commentsLoaded(comments);
+                connectingComment = false;
             }, "cloud");
             cloud.start();
         }
@@ -57,14 +80,20 @@ public class MessageController {
 
     public void clear() {
         posts.clear();
+        comments.clear();
         notificationCenter.postsLoaded(posts);
+        notificationCenter.commentsLoaded(comments);
     }
 
-    public boolean isConnecting() {
-        return connecting;
+    public boolean isConnectingPost() {
+        return connectingPost;
     }
 
     public DBHelper getDbHelper() {
         return dbHelper;
+    }
+
+    public boolean isConnectingComment() {
+        return connectingComment;
     }
 }

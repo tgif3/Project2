@@ -43,12 +43,12 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
         clearBtn.setOnClickListener(v -> messageController.clear());
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
-        refreshBtn.setOnClickListener(v -> messageController.fetch(true));
+        refreshBtn.setOnClickListener(v -> messageController.fetchPosts(true));
 
         Button getBtn = findViewById(R.id.get_btn);
         getBtn.setOnClickListener(v -> {
-            if (!messageController.isConnecting()) {
-                messageController.fetch(false);
+            if (!messageController.isConnectingPost()) {
+                messageController.fetchPosts(false);
             }
         });
     }
