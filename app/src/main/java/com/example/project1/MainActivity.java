@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 import com.example.project1.interfaces.PostRepositoryObserver;
 import com.example.project1.interfaces.Subject;

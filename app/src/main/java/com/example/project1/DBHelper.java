@@ -79,12 +79,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
-    public ArrayList<Comment> getAllComments(int postId) {
+    public ArrayList<Comment> getCommentsByPostId(int postId) {
         ArrayList<Comment> arrayList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         @SuppressLint("Recycle") Cursor res =  db.rawQuery(
-                "select * from Comments where id="+postId+"", null);
+                "select * from Comments where postId="+postId+"", null);
         res.moveToFirst();
 
         while(!res.isAfterLast()) {

@@ -1,16 +1,11 @@
 package com.example.project1;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 
 import java.util.ArrayList;
 
 public class StorageManager {
-    private static final String KEY = "MANAGER";
-    private static final String LAST_KEY = "LAST_KEY";
     private static StorageManager INSTANCE;
     private StorageManager() {}
 
@@ -40,6 +35,6 @@ public class StorageManager {
     }
 
     public ArrayList<Comment> loadComments(int postId) {
-        return MessageController.getInstance().getDbHelper().getAllComments(postId);
+        return MessageController.getInstance().getDbHelper().getCommentsByPostId(postId);
     }
 }

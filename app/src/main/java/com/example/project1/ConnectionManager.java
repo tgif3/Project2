@@ -1,7 +1,5 @@
 package com.example.project1;
 
-import android.util.Log;
-
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -37,17 +35,10 @@ public class ConnectionManager {
                     @Override
                     public void onResponse(List<Post> posts) {
                         result.addAll(posts);
-                        Log.i("Posts", "posts size : " + posts.size());
-                        for (Post post : posts) {
-                            Log.i("Posts", "\n" + post.getId() + "\n" + post.getUserId() +
-                                    "\n" + post.getTitle() + "\n" + post.getBody());
-                        }
-
                         end = true;
                     }
                     @Override
                     public void onError(ANError anError) {
-                        Log.i("Posts", "on Error");
                         end = true;
                     }
                 });
@@ -76,18 +67,10 @@ public class ConnectionManager {
                     @Override
                     public void onResponse(List<Comment> comments) {
                         result.addAll(comments);
-                        Log.i("Comments", "comments size : " + comments.size());
-                        for (Comment comment: comments) {
-                            Log.i("Comments", "\n" + comment.getId() + "\n" + comment.getPostId() +
-                                    "\n" + comment.getEmail() + "\n" + comment.getName() + "\n" +
-                                    comment.getBody());
-                        }
-
                         end = true;
                     }
                     @Override
                     public void onError(ANError anError) {
-                        Log.i("Comments", "on Error");
                         end = true;
                     }
                 });
