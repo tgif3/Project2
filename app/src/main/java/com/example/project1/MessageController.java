@@ -96,4 +96,12 @@ public class MessageController {
     public boolean isConnectingComment() {
         return connectingComment;
     }
+
+    public ArrayList<Post> getPosts() {
+        return posts;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
 }
