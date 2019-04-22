@@ -9,7 +9,7 @@ public interface Subject {
     void postRegisterObserver(PostRepositoryObserver postRepositoryObserver);
     void postRemoveObserver(PostRepositoryObserver postRepositoryObserver);
     void postsLoaded(ArrayList<Post> arrayList);
-    void CommentRegisterObserver(CommentRepositoryObserver postRepositoryObserver);
-    void CommentRemoveObserver(CommentRepositoryObserver postRepositoryObserver);
+    void commentRegisterObserver(CommentRepositoryObserver postRepositoryObserver);
+    void commentRemoveObserver(CommentRepositoryObserver postRepositoryObserver);
     void commentsLoaded(ArrayList<Comment> arrayList);
 }

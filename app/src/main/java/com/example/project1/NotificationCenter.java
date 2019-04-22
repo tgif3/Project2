@@ -48,14 +48,14 @@ public class NotificationCenter implements Subject {
     }
 
     @Override
-    public void CommentRegisterObserver(CommentRepositoryObserver commentRepositoryObserver) {
+    public void commentRegisterObserver(CommentRepositoryObserver commentRepositoryObserver) {
         if(!commentRepositoryObservers.contains(commentRepositoryObserver)) {
             commentRepositoryObservers.add(commentRepositoryObserver);
         }
     }
 
     @Override
-    public void CommentRemoveObserver(CommentRepositoryObserver commentRepositoryObserver) {
+    public void commentRemoveObserver(CommentRepositoryObserver commentRepositoryObserver) {
         commentRepositoryObservers.remove(commentRepositoryObserver);
     }
 

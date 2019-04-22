@@ -1,28 +1,31 @@
 package com.example.project1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.example.project1.Adapters.PostAdapter;
+import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 import com.example.project1.interfaces.PostRepositoryObserver;
 import com.example.project1.interfaces.Subject;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements PostRepositoryObserver {
     private Context context;
     private MessageController messageController;
-    private Post[] posts;
-    private PostAdapter postAdapter;
 
     private Subject notificationCenter;
 
-    GridView gridView;
+    private PostAdapter postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +44,23 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
 
     private void initializeUI() {
         messageController.fetchPosts(false);
+        GridView gridView = findViewById(R.id.gridViewPost);
+        postAdapter = new PostAdapter(context, null);
+        gridView.setAdapter(postAdapter);
+
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            messageController.setPostId(position);
+            messageController.fetchComments(false, position);
+
+            Intent intent = new Intent(context, CommentsActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void updateLinearLayout(ArrayList<Post> arrayList) {
         runOnUiThread(() -> {
-            posts = new Post[arrayList.size()];
-            posts = arrayList.toArray(posts);
-
-            gridView = findViewById(R.id.gridViewPost);
-            postAdapter = new PostAdapter(context, posts);
-            gridView.setAdapter(postAdapter);
-
-            for (int i = 0; i < posts.length; i++) {
-                Log.i("Test", posts[i].getId());
-            }
+            postAdapter.setPosts(arrayList);
+            postAdapter.notifyDataSetChanged();
         });
     }
 

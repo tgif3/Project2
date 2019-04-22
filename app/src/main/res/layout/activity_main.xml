@@ -7,20 +7,18 @@
     tools:context=".MainActivity"
     android:layout_gravity="center"
     android:padding="5dp"
-    android:background="#EAFFEA">
+    android:background="#EAFFEA"
+    >
 
     <GridView
+        android:id="@+id/gridViewPost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridViewPost"
-        android:columnWidth="120dp"
+        android:columnWidth="170dp"
         android:gravity="center"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="24dp"
         android:horizontalSpacing="10dp"
+        android:numColumns="2"
         android:stretchMode="spacingWidthUniform"
-        android:layout_centerInParent = "true"
-
-        />
+        android:verticalSpacing="45dp" />
 
 </LinearLayout>

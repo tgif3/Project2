@@ -1,6 +1,7 @@
 package com.example.project1;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
@@ -13,9 +14,10 @@ public class MessageController {
     private StorageManager storageManager;
     private DBHelper dbHelper;
     private static MessageController INSTANCE;
+
     private ArrayList<Post> posts;
     private ArrayList<Comment> comments;
-
+    private int postId;
     private boolean connectingPost = false;
     private boolean connectingComment = false;
 
@@ -73,16 +75,11 @@ public class MessageController {
                 storageManager.saveComments(comments);
                 notificationCenter.commentsLoaded(comments);
                 connectingComment = false;
+
+                Log.i("Test3", comments.get(0).getBody());
             }, "cloud");
             cloud.start();
         }
-    }
-
-    public void clear() {
-        posts.clear();
-        comments.clear();
-        notificationCenter.postsLoaded(posts);
-        notificationCenter.commentsLoaded(comments);
     }
 
     public boolean isConnectingPost() {
@@ -103,5 +100,13 @@ public class MessageController {
 
     public ArrayList<Comment> getComments() {
         return comments;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 }
