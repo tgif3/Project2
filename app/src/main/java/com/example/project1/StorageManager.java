@@ -4,6 +4,7 @@ import com.example.project1.entity.Comment;
 import com.example.project1.entity.Post;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class StorageManager {
     private static StorageManager INSTANCE;
@@ -21,6 +22,7 @@ public class StorageManager {
         for (Post post : posts) {
             dbHelper.insertPost(post);
         }
+        dbHelper.insertStoreTime("posts", String.valueOf(new Date().getTime()));
     }
 
     public ArrayList<Post> loadPosts() {
@@ -32,9 +34,14 @@ public class StorageManager {
         for (Comment comment : comments) {
             dbHelper.insertComment(comment);
         }
+        if (comments.size() > 0) {
+            Comment comment = comments.get(0);
+            dbHelper.insertStoreTime("comment" + comment.getPostId(), String.valueOf(new Date().getTime()));
+        }
     }
 
     public ArrayList<Comment> loadComments(int postId) {
         return MessageController.getInstance().getDbHelper().getCommentsByPostId(postId);
+
     }
 }

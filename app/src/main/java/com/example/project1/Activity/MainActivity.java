@@ -1,23 +1,20 @@
-package com.example.project1;
+package com.example.project1.Activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import com.example.project1.Adapters.PostAdapter;
-import com.example.project1.entity.Comment;
+import com.example.project1.MessageController;
+import com.example.project1.NotificationCenter;
+import com.example.project1.R;
 import com.example.project1.entity.Post;
 import com.example.project1.interfaces.PostRepositoryObserver;
 import com.example.project1.interfaces.Subject;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity implements PostRepositoryObserver {
     private Context context;
@@ -43,14 +40,13 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     }
 
     private void initializeUI() {
-        messageController.fetchPosts(false);
+        messageController.fetchPosts();
         GridView gridView = findViewById(R.id.gridViewPost);
         postAdapter = new PostAdapter(context, null);
         gridView.setAdapter(postAdapter);
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            messageController.setPostId(position);
-            messageController.fetchComments(false, position);
+            messageController.fetchComments(Integer.parseInt(postAdapter.getPosts()[position].getId()));
 
             Intent intent = new Intent(context, CommentsActivity.class);
             startActivity(intent);

@@ -29,12 +29,17 @@ public class DBHelper extends SQLiteOpenHelper {
                         " postId INT NOT NULL, name VARCHAR(255) NOT NULL," +
                         " email VARCHAR(63) NOT NULL, body text NOT NULL);"
         );
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS StoreTimes(" +
+                        "title VARCHAR(63) NOT NULL, time VARCHAR(63) NOT NULL);"
+        );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS Posts");
         db.execSQL("DROP TABLE IF EXISTS Comments");
+        db.execSQL("DROP TABLE IF EXISTS StoreTimes");
         onCreate(db);
     }
 
@@ -59,11 +64,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert("Comments", null, contentValues);
     }
 
+    public void insertStoreTime (String title, String time) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", title);
+        contentValues.put("time", time);
+        db.insert("StoreTimes", null, contentValues);
+    }
+
     public ArrayList<Post> getAllPosts() {
         ArrayList<Post> arrayList = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        @SuppressLint("Recycle") Cursor res =  db.rawQuery( "select * from Posts", null);
+        @SuppressLint("Recycle") Cursor res =  db.rawQuery( "select * from Posts;", null);
         res.moveToFirst();
 
         while(!res.isAfterLast()) {
@@ -93,11 +106,44 @@ public class DBHelper extends SQLiteOpenHelper {
                     res.getString(res.getColumnIndex("name")),
                     res.getString(res.getColumnIndex("email")),
                     res.getString(res.getColumnIndex("body")));
-
             arrayList.add(comment);
             res.moveToNext();
         }
 
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return arrayList;
+    }
+
+    @SuppressLint("Recycle")
+    public String getStoreTime(String title) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res;
+        try {
+            res = db.rawQuery(
+                    "select * from StoreTimes;", null);
+        } catch (Exception e) {
+            return "";
+        }
+
+        res.moveToFirst();
+
+        long time = 0;
+
+        while(!res.isAfterLast()) {
+            if (res.getString(res.getColumnIndex("title")).equals(title)) {
+                long temp = res.getLong(res.getColumnIndex("time"));
+                if (time < temp) {
+                    time = temp;
+                }
+            }
+            res.moveToNext();
+        }
+
+        return String.valueOf(time);
     }
 }

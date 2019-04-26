@@ -1,28 +1,22 @@
-package com.example.project1;
+package com.example.project1.Activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.project1.Adapters.CommentAdapter;
-import com.example.project1.Adapters.PostAdapter;
+import com.example.project1.NotificationCenter;
+import com.example.project1.R;
 import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
 import com.example.project1.interfaces.CommentRepositoryObserver;
-import com.example.project1.interfaces.PostRepositoryObserver;
 import com.example.project1.interfaces.Subject;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+import java.util.Random;
 
 public class CommentsActivity extends AppCompatActivity implements CommentRepositoryObserver {
     private Context context;
@@ -31,10 +25,14 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
 
     private LinearLayout linearLayout;
 
+    private Random random;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+
+        random = new Random();
 
         context = CommentsActivity.this;
 
@@ -48,11 +46,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
         runOnUiThread(() -> {
             linearLayout.removeAllViews();
             for (Comment comment : arrayList) {
-
-                Log.i("Commentsss", comment.getBody());
-
                 final LayoutInflater layoutInflater = LayoutInflater.from(context);
-                View convertView = layoutInflater.inflate(R.layout.post, null);
+                View convertView = layoutInflater.inflate(R.layout.comment, null);
 
                 final TextView emailTextView = convertView.findViewById(R.id.email);
                 final TextView nameTextView = convertView.findViewById(R.id.name);
@@ -66,7 +61,10 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
                 nameTextView.setText(name);
                 bodyTextView.setText(body);
 
-                convertView.setBackgroundColor(Color.rgb(230, 230, 230));
+                convertView.setBackgroundColor(Color.rgb(
+                        random.nextInt(100) + 156,
+                        random.nextInt(100) + 156,
+                        random.nextInt(100) + 156));
 
                 linearLayout.addView(convertView);
             }

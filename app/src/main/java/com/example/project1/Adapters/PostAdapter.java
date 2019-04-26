@@ -12,11 +12,13 @@ import com.example.project1.R;
 import com.example.project1.entity.Post;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PostAdapter extends BaseAdapter {
 
     final private Context mContext;
     private Post[] posts;
+    private Random random = new Random();
 
     public PostAdapter(Context context, Post[] posts) {
         this.mContext = context;
@@ -77,7 +79,10 @@ public class PostAdapter extends BaseAdapter {
         titleTextView.setText(title);
         bodyTextView.setText(body);
 
-        convertView.setBackgroundColor(Color.rgb(230, 230, 230));
+        convertView.setBackgroundColor(Color.rgb(
+                random.nextInt(100) + 156,
+                random.nextInt(100) + 156,
+                random.nextInt(100) + 156));
 
         return convertView;
     }
