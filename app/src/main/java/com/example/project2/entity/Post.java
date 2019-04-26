@@ -1,4 +1,4 @@
-package com.example.project1.entity;
+package com.example.project2.entity;
 
 public class Post {
     private String userId;

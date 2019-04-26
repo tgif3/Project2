@@ -1,9 +1,9 @@
-package com.example.project1;
+package com.example.project2;
 
 import android.content.Context;
 
-import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
+import com.example.project2.entity.Comment;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +17,10 @@ public class MessageController {
 
     private ArrayList<Post> posts;
     private ArrayList<Comment> comments = new ArrayList<>();
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
 
     private MessageController(Context context) {
         storageManager = StorageManager.getInstance();

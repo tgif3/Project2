@@ -1,4 +1,4 @@
-package com.example.project1;
+package com.example.project2;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
+import com.example.project2.entity.Comment;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 
@@ -108,12 +108,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     res.getString(res.getColumnIndex("body")));
             arrayList.add(comment);
             res.moveToNext();
-        }
-
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
         return arrayList;

@@ -1,5 +1,6 @@
-package com.example.project1.Adapters;
+package com.example.project2.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -8,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.project1.R;
-import com.example.project1.entity.Post;
+import com.example.project2.R;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -52,6 +53,7 @@ public class PostAdapter extends BaseAdapter {
         return null;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Post post = posts[position];

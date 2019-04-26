@@ -1,11 +1,11 @@
-package com.example.project1;
+package com.example.project2;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
+import com.example.project2.entity.Comment;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 import java.util.List;

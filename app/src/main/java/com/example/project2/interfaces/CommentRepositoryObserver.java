@@ -1,6 +1,6 @@
-package com.example.project1.interfaces;
+package com.example.project2.interfaces;
 
-import com.example.project1.entity.Comment;
+import com.example.project2.entity.Comment;
 
 import java.util.ArrayList;
 

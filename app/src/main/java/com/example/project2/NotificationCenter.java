@@ -1,10 +1,10 @@
-package com.example.project1;
+package com.example.project2;
 
-import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
-import com.example.project1.interfaces.CommentRepositoryObserver;
-import com.example.project1.interfaces.PostRepositoryObserver;
-import com.example.project1.interfaces.Subject;
+import com.example.project2.entity.Comment;
+import com.example.project2.entity.Post;
+import com.example.project2.interfaces.CommentRepositoryObserver;
+import com.example.project2.interfaces.PostRepositoryObserver;
+import com.example.project2.interfaces.Subject;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,7 @@ public class NotificationCenter implements Subject {
     private ArrayList<PostRepositoryObserver> postRepositoryObservers;
     private ArrayList<CommentRepositoryObserver> commentRepositoryObservers;
 
+    private ArrayList<Comment> comments = new ArrayList<>();
 
     private NotificationCenter() {
         postRepositoryObservers = new ArrayList<>();
@@ -61,8 +62,17 @@ public class NotificationCenter implements Subject {
 
     @Override
     public void commentsLoaded(ArrayList<Comment> arrayList) {
+        this.comments = arrayList;
         for (CommentRepositoryObserver observer: commentRepositoryObservers) {
             observer.updateComments(arrayList);
         }
+    }
+
+    @Override
+    public void commentsLoaded() {
+        for (CommentRepositoryObserver observer: commentRepositoryObservers) {
+            observer.updateComments(comments);
+        }
+        comments.clear();
     }
 }

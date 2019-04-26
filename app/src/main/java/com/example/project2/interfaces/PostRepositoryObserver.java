@@ -1,6 +1,6 @@
-package com.example.project1.interfaces;
+package com.example.project2.interfaces;
 
-import com.example.project1.entity.Post;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 

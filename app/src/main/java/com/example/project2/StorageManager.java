@@ -1,7 +1,7 @@
-package com.example.project1;
+package com.example.project2;
 
-import com.example.project1.entity.Comment;
-import com.example.project1.entity.Post;
+import com.example.project2.entity.Comment;
+import com.example.project2.entity.Post;
 
 import java.util.ArrayList;
 import java.util.Date;
