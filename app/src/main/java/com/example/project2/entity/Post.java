@@ -28,6 +28,4 @@ public class Post {
     public String getBody() {
         return body;
     }
-
-
 }

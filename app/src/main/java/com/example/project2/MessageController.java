@@ -1,7 +1,6 @@
 package com.example.project2;
 
 import android.content.Context;
-
 import com.example.project2.entity.Comment;
 import com.example.project2.entity.Post;
 
@@ -17,9 +16,14 @@ public class MessageController {
 
     private ArrayList<Post> posts;
     private ArrayList<Comment> comments = new ArrayList<>();
+    private int postId;
 
-    public ArrayList<Comment> getComments() {
-        return comments;
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     private MessageController(Context context) {
@@ -41,14 +45,18 @@ public class MessageController {
         return INSTANCE;
     }
 
-    public void fetchPosts() {
+    public void fetchPosts(boolean isOnline) {
         boolean fromCache = false;
 
-        String time = dbHelper.getStoreTime("posts");
-        if (!time.equals("")) {
-            long currentTime = new Date().getTime();
-            if (currentTime - Long.valueOf(time) < 300000) {
-                fromCache = true;
+        if (!isOnline) {
+            fromCache = true;
+        } else {
+            String time = dbHelper.getStoreTime("posts");
+            if (!time.equals("")) {
+                long currentTime = new Date().getTime();
+                if (currentTime - Long.valueOf(time) < 300000) {
+                    fromCache = true;
+                }
             }
         }
 
@@ -69,15 +77,19 @@ public class MessageController {
         }
     }
 
-    public void fetchComments(int postId) {
+    public void fetchComments(boolean isOnline, int postId) {
         boolean fromCache = false;
 
         String time = dbHelper.getStoreTime("comment" + postId);
 
-        if (!time.equals("")) {
-            long currentTime = new Date().getTime();
-            if (currentTime - Long.valueOf(time) < 300000) {
-                fromCache = true;
+        if (!isOnline) {
+            fromCache = true;
+        } else {
+            if (!time.equals("")) {
+                long currentTime = new Date().getTime();
+                if (currentTime - Long.valueOf(time) < 300000) {
+                    fromCache = true;
+                }
             }
         }
 

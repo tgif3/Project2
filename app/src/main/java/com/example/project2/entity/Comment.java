@@ -7,7 +7,6 @@ public class Comment {
     private String email;
     private String body;
 
-
     public Comment(String id, String postId, String name, String email, String body) {
         this.id = id;
         this.postId = postId;

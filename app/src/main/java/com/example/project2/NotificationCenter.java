@@ -67,12 +67,4 @@ public class NotificationCenter implements Subject {
             observer.updateComments(arrayList);
         }
     }
-
-    @Override
-    public void commentsLoaded() {
-        for (CommentRepositoryObserver observer: commentRepositoryObservers) {
-            observer.updateComments(comments);
-        }
-        comments.clear();
-    }
 }

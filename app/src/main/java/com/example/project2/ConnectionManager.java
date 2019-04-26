@@ -82,7 +82,6 @@ public class ConnectionManager {
                 e.printStackTrace();
             }
         }
-
         return result;
     }
 }

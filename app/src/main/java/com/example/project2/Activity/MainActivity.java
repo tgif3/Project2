@@ -1,13 +1,14 @@
 package com.example.project2.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     private Context context;
     private MessageController messageController;
     private Subject notificationCenter;
-
     private PostAdapter postAdapter;
 
     private boolean gridView = true;
@@ -37,35 +37,32 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         context = MainActivity.this;
 
         notificationCenter = NotificationCenter.getInstance();
         notificationCenter.postRegisterObserver(this);
-
         messageController = MessageController.getInstance(context);
 
         initializeUI();
     }
 
+    @SuppressLint("InflateParams")
     private void initializeUI() {
-        messageController.fetchPosts();
+        messageController.fetchPosts(isOnline());
 
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gridView) {
-                    gridView = false;
-                    button.setText("set grid view");
-                } else {
-                    gridView = true;
-                    button.setText("set list view");
-                }
-                initializeUI();
+        Button button = findViewById(R.id.buttonPost);
+        button.setOnClickListener(v -> {
+            if (gridView) {
+                gridView = false;
+                button.setText(R.string.gridView);
+            } else {
+                gridView = true;
+                button.setText(R.string.listView);
             }
+            initializeUI();
         });
-        LinearLayout linearLayout = findViewById(R.id.posts);
+
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutPost);
         linearLayout.removeAllViews();
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -81,8 +78,7 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
         absListView.setAdapter(postAdapter);
 
         absListView.setOnItemClickListener((parent, view, position, id) -> {
-            messageController.fetchComments(Integer.parseInt(postAdapter.getPosts()[position].getId()));
-
+            messageController.setPostId(Integer.parseInt(postAdapter.getPosts()[position].getId()));
             Intent intent = new Intent(context, CommentsActivity.class).
                     putExtra("post id", postAdapter.getPosts()[position].getId());
             startActivity(intent);
@@ -111,5 +107,11 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.members_menu, menu);
         return true;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

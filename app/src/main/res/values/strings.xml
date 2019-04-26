@@ -3,4 +3,6 @@
     <string name="clear">Clear</string>
     <string name="refresh">Refresh</string>
     <string name="get">Get</string>
+    <string name="listView">set list view</string>
+    <string name="gridView">set grid view</string>
 </resources>

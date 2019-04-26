@@ -1,16 +1,20 @@
 package com.example.project2.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
+import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.example.project2.Adapters.CommentAdapter;
 import com.example.project2.MessageController;
 import com.example.project2.NotificationCenter;
 import com.example.project2.R;
@@ -19,76 +23,79 @@ import com.example.project2.interfaces.CommentRepositoryObserver;
 import com.example.project2.interfaces.Subject;
 
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
 
 public class CommentsActivity extends AppCompatActivity implements CommentRepositoryObserver {
     private Context context;
-
+    private MessageController messageController;
     private Subject notificationCenter;
+    private CommentAdapter commentAdapter;
 
-    private LinearLayout linearLayout;
-
-    private Random random;
-
-    private MessageController messageController = MessageController.getInstance();
-    private Integer postId;
+    private boolean gridView = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
-
-        setTitle("Post" + getIntent().getStringExtra("post id"));
-
-        random = new Random();
-
         context = CommentsActivity.this;
-
         notificationCenter = NotificationCenter.getInstance();
         notificationCenter.commentRegisterObserver(this);
+        messageController = MessageController.getInstance(context);
 
-        linearLayout = findViewById(R.id.linearLayout);
-        notificationCenter.commentsLoaded();
+        initializeUI();
+    }
+
+    @SuppressLint("InflateParams")
+    private void initializeUI() {
+        messageController.fetchComments(isOnline(), messageController.getPostId());
+
+        Button button = findViewById(R.id.buttonComment);
+        if (gridView) {
+            button.setText(R.string.listView);
+        } else {
+            button.setText(R.string.gridView);
+        }
+        button.setOnClickListener(v -> {
+            if (gridView) {
+                gridView = false;
+                button.setText(R.string.gridView);
+            } else {
+                gridView = true;
+                button.setText(R.string.listView);
+            }
+            initializeUI();
+        });
+
+        LinearLayout linearLayout = findViewById(R.id.linearLayoutComment);
+        linearLayout.removeAllViews();
+
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        AbsListView absListView;
+        if (gridView) {
+            absListView = (GridView) layoutInflater.inflate(R.layout.grid_view, null);
+        } else {
+            absListView = (ListView) layoutInflater.inflate(R.layout.list_view, null);
+        }
+
+        linearLayout.addView(absListView);
+        commentAdapter = new CommentAdapter(context, null);
+        absListView.setAdapter(commentAdapter);
     }
 
     private void updateLinearLayout(ArrayList<Comment> arrayList) {
         runOnUiThread(() -> {
-            linearLayout.removeAllViews();
-            if (arrayList.size() > 0) {
-                postId = Integer.valueOf(arrayList.get(0).getPostId());
-                setTitle("Post" + arrayList.get(0).getPostId() + ", " + arrayList.size() + " Comments");
+            if (arrayList != null && arrayList.size() > 0) {
+                setTitle("Post " + messageController.getPostId() + ", Comments" + arrayList.size());
+            } else {
+                setTitle("Post " + messageController.getPostId());
             }
-            for (Comment comment : arrayList) {
-                final LayoutInflater layoutInflater = LayoutInflater.from(context);
-                View convertView = layoutInflater.inflate(R.layout.comment, null);
-
-                final TextView emailTextView = convertView.findViewById(R.id.email);
-                final TextView nameTextView = convertView.findViewById(R.id.name);
-                final TextView bodyTextView = convertView.findViewById(R.id.body);
-
-                String email = comment.getEmail();
-                String name = comment.getName();
-                String body = comment.getBody();
-
-                emailTextView.setText(email);
-                nameTextView.setText(name);
-                bodyTextView.setText(body);
-
-                convertView.setBackgroundColor(Color.rgb(
-                        random.nextInt(100) + 156,
-                        random.nextInt(100) + 156,
-                        random.nextInt(100) + 156));
-
-                linearLayout.addView(convertView);
-            }
+            commentAdapter.setComments(arrayList);
+            commentAdapter.notifyDataSetChanged();
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        messageController.getComments().clear();
         notificationCenter.commentRemoveObserver(this);
     }
 
@@ -103,18 +110,9 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
         return true;
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.i("Test", "ajab...");
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        arrayList.add(postId);
-        outState.putIntegerArrayList("copy", arrayList);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        messageController.fetchComments(Objects.requireNonNull(savedInstanceState.getIntegerArrayList("copy")).get(0));
-        super.onRestoreInstanceState(savedInstanceState);
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

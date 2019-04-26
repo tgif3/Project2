@@ -10,36 +10,32 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.project2.R;
-import com.example.project2.entity.Post;
+import com.example.project2.entity.Comment;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PostAdapter extends BaseAdapter {
+public class CommentAdapter extends BaseAdapter {
     final private Context context;
-    private Post[] posts;
+    private Comment[] comments;
     private Random random = new Random();
 
-    public PostAdapter(Context context, Post[] posts) {
+    public CommentAdapter(Context context, Comment[] comments) {
         this.context = context;
-        this.posts = posts;
+        this.comments = comments;
     }
 
-    public void setPosts(ArrayList<Post> arrayList) {
-        Post[] posts = new Post[arrayList.size()];
-        this.posts = arrayList.toArray(posts);
-    }
-
-    public Post[] getPosts() {
-        return posts;
+    public void setComments(ArrayList<Comment> arrayList) {
+        Comment[] comments = new Comment[arrayList.size()];
+        this.comments = arrayList.toArray(comments);
     }
 
     @Override
     public int getCount() {
-        if (posts == null) {
+        if (comments == null) {
             return 0;
         }
-        return posts.length;
+        return comments.length;
     }
 
     @Override
@@ -55,29 +51,23 @@ public class PostAdapter extends BaseAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Post post = posts[position];
+        final Comment comment = comments[position];
 
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.post, null);
+            convertView = layoutInflater.inflate(R.layout.comment, null);
         }
 
-        final TextView titleTextView = convertView.findViewById(R.id.title);
+        final TextView emailTextView = convertView.findViewById(R.id.email);
+        final TextView nameTextView = convertView.findViewById(R.id.name);
         final TextView bodyTextView = convertView.findViewById(R.id.body);
 
-        String title = post.getTitle();
-        String body = post.getBody();
+        String email = comment.getEmail();
+        String name = comment.getName();
+        String body = comment.getBody();
 
-        if (body.length() > 90) {
-            body = body.substring(0, 90);
-            if (body.contains(" ")) {
-                body = body.substring(0, body.lastIndexOf(' ')) + " ...";
-            } else {
-                body = body + " ...";
-            }
-        }
-
-        titleTextView.setText(title);
+        emailTextView.setText(email);
+        nameTextView.setText(name);
         bodyTextView.setText(body);
 
         convertView.setBackgroundColor(Color.rgb(

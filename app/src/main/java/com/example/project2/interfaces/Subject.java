@@ -12,5 +12,4 @@ public interface Subject {
     void commentRegisterObserver(CommentRepositoryObserver postRepositoryObserver);
     void commentRemoveObserver(CommentRepositoryObserver postRepositoryObserver);
     void commentsLoaded(ArrayList<Comment> arrayList);
-    void commentsLoaded();
 }
