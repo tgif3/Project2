@@ -31,6 +31,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
     private CommentAdapter commentAdapter;
 
     private boolean gridView = false;
+    private boolean endCreate = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +50,32 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
     private void initializeUI() {
         messageController.fetchComments(isOnline(), messageController.getPostId());
 
-        Button button = findViewById(R.id.buttonComment);
+        Button changeViewComments = findViewById(R.id.changeViewComments);
         if (gridView) {
-            button.setText(R.string.listView);
+            changeViewComments.setText(R.string.listView);
         } else {
-            button.setText(R.string.gridView);
+            changeViewComments.setText(R.string.gridView);
         }
-        button.setOnClickListener(v -> {
-            if (gridView) {
-                gridView = false;
-                button.setText(R.string.gridView);
-            } else {
-                gridView = true;
-                button.setText(R.string.listView);
+        changeViewComments.setOnClickListener(v -> {
+            if (endCreate) {
+                endCreate = false;
+                if (gridView) {
+                    gridView = false;
+                    changeViewComments.setText(R.string.gridView);
+                } else {
+                    gridView = true;
+                    changeViewComments.setText(R.string.listView);
+                }
+                initializeUI();
             }
-            initializeUI();
+        });
+
+        Button refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(v -> {
+            if (endCreate) {
+                endCreate = false;
+                initializeUI();
+            }
         });
 
         LinearLayout linearLayout = findViewById(R.id.linearLayoutComment);
@@ -79,6 +92,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentReposi
         linearLayout.addView(absListView);
         commentAdapter = new CommentAdapter(context, null);
         absListView.setAdapter(commentAdapter);
+
+        endCreate = true;
     }
 
     private void updateLinearLayout(ArrayList<Comment> arrayList) {

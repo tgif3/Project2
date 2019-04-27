@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     private PostAdapter postAdapter;
 
     private boolean gridView = true;
+    private boolean endCreate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +51,36 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
     private void initializeUI() {
         messageController.fetchPosts(isOnline());
 
-        Button button = findViewById(R.id.buttonPost);
-        button.setOnClickListener(v -> {
-            if (gridView) {
-                gridView = false;
-                button.setText(R.string.gridView);
-            } else {
-                gridView = true;
-                button.setText(R.string.listView);
+        Button changeViewPost = findViewById(R.id.changeViewPost);
+        changeViewPost.setOnClickListener(v -> {
+            if (endCreate) {
+                endCreate = false;
+                if (gridView) {
+                    gridView = false;
+                    changeViewPost.setText(R.string.gridView);
+                } else {
+                    gridView = true;
+                    changeViewPost.setText(R.string.listView);
+                }
+                initializeUI();
             }
-            initializeUI();
+        });
+
+        Button clear = findViewById(R.id.clear);
+        clear.setOnClickListener(v -> {
+            if (endCreate) {
+                endCreate = false;
+                messageController.getDbHelper().drop();
+                initializeUI();
+            }
+        });
+
+        Button refresh = findViewById(R.id.refresh);
+        refresh.setOnClickListener(v -> {
+            if (endCreate) {
+                endCreate = false;
+                initializeUI();
+            }
         });
 
         LinearLayout linearLayout = findViewById(R.id.linearLayoutPost);
@@ -83,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements PostRepositoryObs
                     putExtra("post id", postAdapter.getPosts()[position].getId());
             startActivity(intent);
         });
+
+        endCreate = true;
     }
 
     private void updateLinearLayout(ArrayList<Post> arrayList) {

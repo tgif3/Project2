@@ -43,6 +43,14 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void drop() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS Posts");
+        db.execSQL("DROP TABLE IF EXISTS Comments");
+        db.execSQL("DROP TABLE IF EXISTS StoreTimes");
+        onCreate(db);
+    }
+
     public void insertPost (Post post) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

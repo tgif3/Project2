@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Project2</string>
-    <string name="clear">Clear</string>
-    <string name="refresh">Refresh</string>
-    <string name="get">Get</string>
+    <string name="clear">clear cache</string>
+    <string name="refresh">refresh</string>
     <string name="listView">set list view</string>
     <string name="gridView">set grid view</string>
 </resources>
